@@ -1,24 +1,38 @@
 package main
 
 import (
-  "net/http"
+	"log"
 
-  "github.com/gin-gonic/gin"
+	"mbg-backend/internal/config"
+	"mbg-backend/internal/database"
+	"mbg-backend/internal/middleware"
+	"mbg-backend/internal/routes"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-  // Create a Gin router with default middleware (logger and recovery)
-  r := gin.Default()
+	cfg, err := config.Load()
+	if err != nil {
+		log.Fatalf("failed to load config: %v", err)
+	}
 
-  // Define a simple GET endpoint
-  r.GET("/ping", func(c *gin.Context) {
-    // Return JSON response
-    c.JSON(http.StatusOK, gin.H{
-      "message": "pong",
-    })
-  })
+	db, err := database.NewMySQL(cfg)
+	if err != nil {
+		log.Fatalf("failed to connect database: %v", err)
+	}
+	defer db.Close()
 
-  // Start server on port 8080 (default)
-  // Server will listen on 0.0.0.0:8080 (localhost:8080 on Windows)
-  r.Run()
+	router := gin.New()
+	router.Use(gin.Recovery())
+	router.Use(middleware.RequestLogger())
+	router.Use(middleware.CORS(cfg.CORSAllowedOrigin))
+
+	routes.Register(router, db, cfg)
+
+	addr := ":" + cfg.AppPort
+	log.Printf("ITSPay backend running on http://localhost%s", addr)
+	if err := router.Run(addr); err != nil {
+		log.Fatalf("failed to run server: %v", err)
+	}
 }
