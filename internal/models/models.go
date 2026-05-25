@@ -73,3 +73,10 @@ type DailyReport struct {
 	TotalPayment     string `json:"total_payment"`
 	TotalTransaksiOK uint64 `json:"total_transaksi_success"`
 }
+
+type AdminSummary struct {
+	TotalUsers            uint64 `json:"total_users"`
+	TotalMerchants        uint64 `json:"total_merchants"`
+	TotalTransactions     uint64 `json:"total_transactions"`
+	TotalSuccessfulAmount string `json:"total_successful_amount"`
+}

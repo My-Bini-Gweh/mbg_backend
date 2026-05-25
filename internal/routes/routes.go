@@ -65,6 +65,7 @@ func Register(router *gin.Engine, db *sql.DB, cfg config.Config) {
 			admin := protected.Group("/admin")
 			admin.Use(middleware.Role("admin"))
 			{
+				admin.GET("/summary", adminHandler.Summary)
 				admin.GET("/transactions", adminHandler.Transactions)
 				admin.GET("/audit-logs", adminHandler.AuditLogs)
 				admin.GET("/reports/daily", adminHandler.DailyReports)

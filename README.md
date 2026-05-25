@@ -1,6 +1,6 @@
 # ITSPay Backend
 
-Backend demo untuk Final Project Manajemen Basis Data. Fokus utama project ini adalah menunjukkan proses finansial yang dikendalikan database melalui stored procedure, trigger, function, view, index, dan transaction control.
+Backend REST API untuk sistem pembayaran digital kampus. Proses finansial utama dikendalikan database melalui stored procedure, trigger, function, view, index, dan transaction control.
 
 ## Fitur Utama
 
@@ -61,7 +61,7 @@ mysql -u root -p itspay < migrations/003_create_procedures.sql
 mysql -u root -p itspay < migrations/004_create_triggers.sql
 mysql -u root -p itspay < migrations/005_create_views.sql
 mysql -u root -p itspay < migrations/006_create_indexes.sql
-mysql -u root -p itspay < migrations/007_seed_demo_data.sql
+mysql -u root -p itspay < migrations/007_seed_initial_data.sql
 ```
 
 Jalankan server:
@@ -76,7 +76,7 @@ Server berjalan di:
 http://localhost:8080
 ```
 
-## Akun Demo
+## Akun Awal
 
 Mahasiswa:
 
@@ -93,7 +93,7 @@ email: admin@itspay.test
 password: password
 ```
 
-## Demo Flow
+## Flow Operasional
 
 Login mahasiswa:
 
@@ -165,15 +165,14 @@ Catalog:
 
 Admin:
 
+- `GET /api/admin/summary`
 - `GET /api/admin/transactions`
 - `GET /api/admin/audit-logs`
 - `GET /api/admin/reports/daily`
 
-## Catatan Presentasi
+## Catatan Arsitektur
 
-Bagian yang perlu ditonjolkan saat demo:
-
-- Backend tidak mengubah saldo manual untuk top up/payment.
+- Backend tidak mengubah saldo manual untuk top up/payment di application layer.
 - Proses finansial terjadi di `sp_topup_wallet` dan `sp_bayar_merchant`.
 - `sp_bayar_merchant` memakai transaksi database dan `SELECT ... FOR UPDATE`.
 - Saldo tidak bisa negatif karena validasi database.

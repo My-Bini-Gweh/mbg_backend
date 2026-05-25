@@ -17,6 +17,16 @@ func NewAdminHandler(adminRepo *repositories.AdminRepository) *AdminHandler {
 	return &AdminHandler{adminRepo: adminRepo}
 }
 
+func (h *AdminHandler) Summary(c *gin.Context) {
+	summary, err := h.adminRepo.Summary(c.Request.Context())
+	if err != nil {
+		utils.Error(c, http.StatusInternalServerError, "Gagal mengambil ringkasan admin")
+		return
+	}
+
+	utils.Success(c, http.StatusOK, "Ringkasan admin berhasil diambil", summary)
+}
+
 func (h *AdminHandler) Transactions(c *gin.Context) {
 	transactions, err := h.adminRepo.ListTransactions(c.Request.Context())
 	if err != nil {

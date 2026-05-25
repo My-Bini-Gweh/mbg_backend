@@ -15,6 +15,30 @@ func NewAdminRepository(db *sql.DB) *AdminRepository {
 	return &AdminRepository{db: db}
 }
 
+func (r *AdminRepository) Summary(ctx context.Context) (*models.AdminSummary, error) {
+	ctx, cancel := withTimeout(ctx)
+	defer cancel()
+
+	var summary models.AdminSummary
+	err := r.db.QueryRowContext(ctx, `
+		SELECT
+			(SELECT COUNT(*) FROM mahasiswa),
+			(SELECT COUNT(*) FROM merchant WHERE status = 'ACTIVE'),
+			(SELECT COUNT(*) FROM transaksi),
+			(SELECT COALESCE(SUM(nominal), 0.00) FROM transaksi WHERE status = 'SUCCESS')
+	`).Scan(
+		&summary.TotalUsers,
+		&summary.TotalMerchants,
+		&summary.TotalTransactions,
+		&summary.TotalSuccessfulAmount,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &summary, nil
+}
+
 func (r *AdminRepository) ListTransactions(ctx context.Context) ([]models.Transaksi, error) {
 	ctx, cancel := withTimeout(ctx)
 	defer cancel()
