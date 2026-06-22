@@ -63,10 +63,42 @@ func Register(router *gin.Engine, db *sql.DB, cfg config.Config) {
 			protected.POST("/payments", middleware.Role("mahasiswa"), financialHandler.PayMerchant)
 
 			admin := protected.Group("/admin")
-			admin.Use(middleware.Role("admin"))
+			admin.Use(middleware.Role("admin"), middleware.ActiveAccount(db))
 			{
 				admin.GET("/summary", adminHandler.Summary)
+
+				admin.GET("/mahasiswa", adminHandler.Mahasiswa)
+				admin.POST("/mahasiswa", adminHandler.CreateMahasiswa)
+				admin.GET("/mahasiswa/:id", adminHandler.MahasiswaDetail)
+				admin.PUT("/mahasiswa/:id", adminHandler.UpdateMahasiswa)
+				admin.DELETE("/mahasiswa/:id", adminHandler.DeleteMahasiswa)
+				admin.GET("/auth-records", adminHandler.AuthRecords)
+				admin.GET("/auth-records/:id", adminHandler.AuthRecordDetail)
+
+				admin.GET("/wallets", adminHandler.Wallets)
+				admin.GET("/wallets/:id", adminHandler.WalletDetail)
+				admin.PUT("/wallets/:id", adminHandler.UpdateWallet)
+
+				admin.GET("/banks", adminHandler.Banks)
+				admin.POST("/banks", adminHandler.CreateBank)
+				admin.GET("/banks/:id", adminHandler.BankDetail)
+				admin.PUT("/banks/:id", adminHandler.UpdateBank)
+				admin.DELETE("/banks/:id", adminHandler.DeleteBank)
+
+				admin.GET("/accounts", adminHandler.Rekening)
+				admin.POST("/accounts", adminHandler.CreateRekening)
+				admin.GET("/accounts/:id", adminHandler.RekeningDetail)
+				admin.PUT("/accounts/:id", adminHandler.UpdateRekening)
+				admin.DELETE("/accounts/:id", adminHandler.DeleteRekening)
+
+				admin.GET("/merchants", adminHandler.Merchants)
+				admin.POST("/merchants", adminHandler.CreateMerchant)
+				admin.GET("/merchants/:id", adminHandler.MerchantDetail)
+				admin.PUT("/merchants/:id", adminHandler.UpdateMerchant)
+				admin.DELETE("/merchants/:id", adminHandler.DeleteMerchant)
+
 				admin.GET("/transactions", adminHandler.Transactions)
+				admin.GET("/transactions/:id", adminHandler.TransactionDetail)
 				admin.GET("/audit-logs", adminHandler.AuditLogs)
 				admin.GET("/reports/daily", adminHandler.DailyReports)
 			}

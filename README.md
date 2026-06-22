@@ -166,9 +166,24 @@ Catalog:
 Admin:
 
 - `GET /api/admin/summary`
+- `GET|POST /api/admin/mahasiswa`
+- `GET|PUT|DELETE /api/admin/mahasiswa/:id`
+- `GET /api/admin/auth-records`
+- `GET /api/admin/auth-records/:id`
+- `GET /api/admin/wallets`
+- `GET|PUT /api/admin/wallets/:id`
+- `GET|POST /api/admin/banks`
+- `GET|PUT|DELETE /api/admin/banks/:id`
+- `GET|POST /api/admin/accounts`
+- `GET|PUT|DELETE /api/admin/accounts/:id`
+- `GET|POST /api/admin/merchants`
+- `GET|PUT|DELETE /api/admin/merchants/:id`
 - `GET /api/admin/transactions`
+- `GET /api/admin/transactions/:id`
 - `GET /api/admin/audit-logs`
 - `GET /api/admin/reports/daily`
+
+Endpoint list admin menerima `page`, `per_page`, `search`, `sort`, `order`, dan filter entity terkait. Semua endpoint admin memerlukan JWT dengan role `admin` dari akun yang masih aktif.
 
 ## Catatan Arsitektur
 

@@ -71,6 +71,9 @@ func (s *AuthService) Login(ctx context.Context, email, password string) (*Login
 	if !utils.CheckPassword(password, record.PasswordHash) {
 		return nil, ErrInvalidCredentials
 	}
+	if record.Mahasiswa.Status != "ACTIVE" {
+		return nil, ErrInvalidCredentials
+	}
 
 	if err := s.authRepo.UpdateLastLogin(ctx, record.Mahasiswa.ID); err != nil {
 		return nil, err
